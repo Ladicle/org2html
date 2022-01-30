@@ -1,0 +1,16 @@
+linters:
+  enable:
+    - bodyclose
+    - durationcheck
+    - errorlint
+    - goimports
+    - revive
+    - gosec
+    - misspell
+    - nolintlint
+    - nakedret
+    - unconvert
+    - unparam
+    - whitespace
+    - prealloc
+    - exportloopref
