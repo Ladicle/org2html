@@ -2,50 +2,58 @@ package org_test
 
 import (
 	"errors"
+	"io"
 	"reflect"
 	"testing"
 
-	"github.com/Ladicle/org2html/org"
+	. "github.com/Ladicle/org2html/org"
+)
+
+var _ Node = testNode{}
+
+type testNode struct{}
+
+func (n testNode) Write(w io.Writer) error { return nil }
+
+var (
+	testKind     = TokenKind("kind")
+	testParserFn = func(p *Parser, i int) (consumed int, node Node, err error) {
+		return 1, testNode{}, nil
+	}
 )
 
 func TestParse(t *testing.T) {
 	var tests = []struct {
 		desc      string
-		tokens    []org.Token
-		wantNodes []org.Node
+		tokens    []Token
+		wantNodes []Node
 		wantError error
 	}{
 		{
 			desc: "no token",
 		},
 		{
-			desc: "only one token",
-			tokens: []org.Token{
-				org.NewToken(org.KindAgenda, 1, []string{"CLOSED", "2022-01-30", "Sun", "10:03", ""})},
-			wantNodes: []org.Node{
-				org.Agenda{Logs: map[org.AgendaKey]org.Timestamp{
-					org.AgendaClosed: mustParseTimestamp(t, "2022-01-30 Sun 10:03", "")}}},
+			desc:      "only one token",
+			tokens:    []Token{NewToken(testKind, 1, []string{})},
+			wantNodes: []Node{testNode{}},
 		},
 		{
 			desc: "multiple tokens",
-			tokens: []org.Token{
-				org.NewToken(org.KindAgenda, 1, []string{"CLOSED", "2022-01-30", "Sun", "10:03", ""}),
-				org.NewToken(org.KindAgenda, 1, []string{"CLOSED", "2022-01-30", "Sun", "10:03", ""})},
-			wantNodes: []org.Node{
-				org.Agenda{Logs: map[org.AgendaKey]org.Timestamp{
-					org.AgendaClosed: mustParseTimestamp(t, "2022-01-30 Sun 10:03", "")}},
-				org.Agenda{Logs: map[org.AgendaKey]org.Timestamp{
-					org.AgendaClosed: mustParseTimestamp(t, "2022-01-30 Sun 10:03", "")}}},
+			tokens: []Token{
+				NewToken(testKind, 1, []string{}),
+				NewToken(testKind, 1, []string{}),
+			},
+			wantNodes: []Node{testNode{}, testNode{}},
 		},
 		{
 			desc:      "unknown",
-			tokens:    []org.Token{org.NewToken("unknown", 1, nil)},
+			tokens:    []Token{NewToken("unknown", 1, nil)},
 			wantError: errors.New("unknown token: kind=unknown"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
-			parser := org.NewParser(tt.tokens)
+			parser := NewParser(tt.tokens, map[TokenKind]ParseFn{testKind: testParserFn})
 			nodes, err := parser.Parse()
 			if err != nil {
 				if tt.wantError == nil || err.Error() != tt.wantError.Error() {

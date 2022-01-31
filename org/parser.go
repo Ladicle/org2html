@@ -4,23 +4,29 @@ import (
 	"fmt"
 )
 
-// parseFn is a function to parse Node and return the number of tokens consumed,
+// ParseFn is a function to parse Node and return the number of tokens consumed,
 // parsed Node and error. The argument i indicates the index of the token that
 // will start parsing.
-type parseFn = func(p *Parser, i int) (consumed int, node Node, err error)
+type ParseFn = func(p *Parser, i int) (consumed int, node Node, err error)
 
-// parseFns expresses currently supported passers.
-var parseFns = map[TokenKind]parseFn{
+// defaultParseFns expresses currently supported passers.
+var defaultParseFns = map[TokenKind]ParseFn{
 	KindAgenda: ParseAgenda,
 }
 
 // NewParser creates a new Parser object.
-func NewParser(tokens []Token) Parser {
-	return Parser{tokens: tokens}
+func NewParser(tokens []Token, parseFns map[TokenKind]ParseFn) Parser {
+	return Parser{tokens: tokens, parseFns: parseFns}
+}
+
+// DefaultParser creates a new Parser object with the default parser functions.
+func DefaultParser(tokens []Token) Parser {
+	return NewParser(tokens, defaultParseFns)
 }
 
 type Parser struct {
-	tokens []Token
+	tokens   []Token
+	parseFns map[TokenKind]ParseFn
 }
 
 func (p Parser) Parse() ([]Node, error) {
@@ -37,7 +43,7 @@ func (p *Parser) parseMany(i int) (int, []Node, error) {
 		start = i
 	)
 	for i < len(p.tokens) {
-		fn, ok := parseFns[p.tokens[i].kind]
+		fn, ok := p.parseFns[p.tokens[i].kind]
 		if !ok {
 			return 0, nil, fmt.Errorf("unknown token: kind=%v", p.tokens[i].kind)
 		}

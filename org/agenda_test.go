@@ -104,7 +104,7 @@ func TestParseAgenda(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
-			parser := org.NewParser([]org.Token{tt.token})
+			parser := org.DefaultParser([]org.Token{tt.token})
 			consumed, node, err := org.ParseAgenda(&parser, 0)
 			if err != nil {
 				if tt.wantError == nil || err.Error() != tt.wantError.Error() {
