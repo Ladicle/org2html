@@ -1,7 +1,6 @@
 package org
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"regexp"
@@ -24,7 +23,14 @@ type Agenda struct {
 }
 
 func (a Agenda) Write(w io.Writer) error {
-	return errors.New("not implemented yet")
+	for _, key := range []AgendaKey{AgendaClosed, AgendaDeadline, AgendaScheduled} {
+		log, ok := a.Logs[key]
+		if !ok {
+			continue
+		}
+		fmt.Fprintf(w, `<span><i class="agenda-key">%v</i>%v</span>`, key, log)
+	}
+	return nil
 }
 
 var agendaRegexp = regexp.MustCompile(fmt.Sprintf(

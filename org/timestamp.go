@@ -15,6 +15,13 @@ type Timestamp struct {
 	Interval string
 }
 
+func (t Timestamp) String() string {
+	if t.IsDate {
+		return t.Time.Format(datestampFormat)
+	}
+	return t.Time.Format(timestampFormat)
+}
+
 func ParseTimestamp(value, interval string) (Timestamp, error) {
 	t, err := time.Parse(timestampFormat, value)
 	if err != nil {
