@@ -31,16 +31,30 @@ type Token struct {
 	vals []string
 }
 
-// lexFn is a lexer function which returns token and flag.
-type lexFn = func(line string) (t Token, ok bool)
+// LexFn is a lexer function which returns token and flag.
+type LexFn = func(line string) (t Token, ok bool)
 
-// lexFns expresses currently supported lexers.
-var lexFns = []lexFn{
+// defaultLexFns expresses currently supported lexers.
+var defaultLexFns = []LexFn{
 	LexAgenda,
 }
 
+// NewTokenizer creates a new Tokenizer object.
+func NewTokenizer(lexFns []LexFn) Tokenizer {
+	return Tokenizer{lexFns: lexFns}
+}
+
+// DefaultTokenizer creates a new Tokenizer object which has default LexFns.
+func DefaultTokenizer() Tokenizer {
+	return Tokenizer{lexFns: defaultLexFns}
+}
+
+type Tokenizer struct {
+	lexFns []LexFn
+}
+
 // Tokenize scan each line and Tokenize them with the lexFns.
-func Tokenize(in io.Reader) ([]Token, error) {
+func (t Tokenizer) Tokenize(in io.Reader) ([]Token, error) {
 	var (
 		scanner = bufio.NewScanner(in)
 		tokens  []Token
@@ -49,7 +63,7 @@ nextLine:
 	for scanner.Scan() {
 		line := scanner.Text()
 		// try all lexFns
-		for _, lexFn := range lexFns {
+		for _, lexFn := range t.lexFns {
 			if token, ok := lexFn(line); ok {
 				tokens = append(tokens, token)
 				continue nextLine
