@@ -6,16 +6,16 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Ladicle/org2html/org"
+	. "github.com/Ladicle/org2html/org"
 )
 
 var (
-	testToken = org.NewToken("test", 0, []string{})
-	testLexFn = func(line string) (t org.Token, ok bool) {
+	testToken = NewToken("test", 0, []string{})
+	testLexFn = func(line string) (t Token, ok bool) {
 		if line == "test" {
 			return testToken, true
 		}
-		return org.Token{}, false
+		return Token{}, false
 	}
 )
 
@@ -23,7 +23,7 @@ func TestTokenize(t *testing.T) {
 	var tests = []struct {
 		desc       string
 		input      string
-		wantTokens []org.Token
+		wantTokens []Token
 		wantError  error
 	}{
 		{
@@ -32,12 +32,12 @@ func TestTokenize(t *testing.T) {
 		{
 			desc:       "one token",
 			input:      "test",
-			wantTokens: []org.Token{testToken},
+			wantTokens: []Token{testToken},
 		},
 		{
 			desc:       "multiple token",
 			input:      "test\ntest",
-			wantTokens: []org.Token{testToken, testToken},
+			wantTokens: []Token{testToken, testToken},
 		},
 		{
 			desc:      "no lexers can parse",
@@ -47,7 +47,7 @@ func TestTokenize(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
-			tokenizer := org.NewTokenizer([]org.LexFn{testLexFn})
+			tokenizer := NewTokenizer([]LexFn{testLexFn})
 			tokens, err := tokenizer.Tokenize(strings.NewReader(tt.input))
 			if err != nil {
 				if tt.wantError == nil || err.Error() != tt.wantError.Error() {
