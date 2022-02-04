@@ -23,13 +23,15 @@ type Agenda struct {
 }
 
 func (a Agenda) Write(w io.Writer) error {
+	fmt.Fprintln(w, `<ul class="org-agenda">`)
 	for _, key := range []AgendaKey{AgendaClosed, AgendaDeadline, AgendaScheduled} {
 		log, ok := a.Logs[key]
 		if !ok {
 			continue
 		}
-		fmt.Fprintf(w, `<span><i class="agenda-key">%v</i>%v</span>`, key, log)
+		fmt.Fprintf(w, "<li><span class=\"key\">%v</span><span class=\"date\">%v</span></li>\n", key, log)
 	}
+	fmt.Fprintln(w, `</ul>`)
 	return nil
 }
 
