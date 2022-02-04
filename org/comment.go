@@ -23,7 +23,7 @@ var commentRegexp = regexp.MustCompile(`^\s*#\s*(.*)`)
 
 func LexComment(line string) (Token, bool) {
 	if m := commentRegexp.FindStringSubmatch(line); m != nil {
-		return NewToken(KindComment, 1, []string{m[1]}), true
+		return NewToken(KindComment, 1, m[1:]), true
 	}
 	return Token{}, false
 }

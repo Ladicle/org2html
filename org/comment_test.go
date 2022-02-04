@@ -27,6 +27,12 @@ func TestLexComment(t *testing.T) {
 			wantFlag:  true,
 			wantToken: NewToken(KindComment, 1, []string{"this is test comment"}),
 		},
+		{
+			desc:      "comment with space  ",
+			line:      "   # this is test comment",
+			wantFlag:  true,
+			wantToken: NewToken(KindComment, 1, []string{"this is test comment"}),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
