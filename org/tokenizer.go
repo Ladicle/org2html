@@ -10,6 +10,7 @@ type TokenKind string
 
 const (
 	KindAgenda  TokenKind = "agenda"
+	KindKeyword           = "keyword"
 	KindComment           = "comment"
 )
 
@@ -37,6 +38,7 @@ type LexFn = func(line string) (t Token, ok bool)
 
 // defaultLexFns expresses currently supported lexers.
 var defaultLexFns = []LexFn{
+	LexKeyword, // #+<keyword>: <val>
 	LexComment, // # <comment>
 	LexAgenda,  // <agenda>: <date>
 }
