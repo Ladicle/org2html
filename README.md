@@ -5,4 +5,4 @@ This project inspired by [niklasfasching/go-org](https://github.com/niklasfaschi
 
 ## References
 
-- Org Syntax (draft): https://ox-hugo.scripter.co/
+- Org Syntax (draft): https://orgmode.org/worg/dev/org-syntax.html
