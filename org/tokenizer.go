@@ -13,6 +13,7 @@ const (
 	KindKeyword            = "keyword"
 	KindComment            = "comment"
 	KindHeadline           = "headline"
+	KindSection            = "section"
 )
 
 // NewToken creates new Token object.
@@ -43,6 +44,8 @@ var defaultLexFns = []LexFn{
 	LexKeyword,  // #+<keyword>: <val>
 	LexComment,  // # <comment>
 	LexAgenda,   // <agenda>: <date>
+
+	LexSection, // *
 }
 
 // NewTokenizer creates a new Tokenizer object.

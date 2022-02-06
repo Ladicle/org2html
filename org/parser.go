@@ -15,6 +15,7 @@ var defaultParseFns = map[TokenKind]ParseFn{
 	KindComment:  ParseComment,
 	KindKeyword:  ParseKeyword,
 	KindHeadline: ParseHeadline,
+	KindSection:  ParseSection,
 }
 
 // NewParser creates a new Parser object.
