@@ -11,9 +11,10 @@ type ParseFn = func(p *Parser, i int) (consumed int, node Node, err error)
 
 // defaultParseFns expresses currently supported passers.
 var defaultParseFns = map[TokenKind]ParseFn{
-	KindAgenda:  ParseAgenda,
-	KindComment: ParseComment,
-	KindKeyword: ParseKeyword,
+	KindAgenda:   ParseAgenda,
+	KindComment:  ParseComment,
+	KindKeyword:  ParseKeyword,
+	KindHeadline: ParseHeadline,
 }
 
 // NewParser creates a new Parser object.

@@ -9,9 +9,10 @@ import (
 type TokenKind string
 
 const (
-	KindAgenda  TokenKind = "agenda"
-	KindKeyword           = "keyword"
-	KindComment           = "comment"
+	KindAgenda   TokenKind = "agenda"
+	KindKeyword            = "keyword"
+	KindComment            = "comment"
+	KindHeadline           = "headline"
 )
 
 // NewToken creates new Token object.
@@ -38,9 +39,10 @@ type LexFn = func(line string) (t Token, ok bool)
 
 // defaultLexFns expresses currently supported lexers.
 var defaultLexFns = []LexFn{
-	LexKeyword, // #+<keyword>: <val>
-	LexComment, // # <comment>
-	LexAgenda,  // <agenda>: <date>
+	LexHeadline, // * <keyword> <priority> <title> <tags>
+	LexKeyword,  // #+<keyword>: <val>
+	LexComment,  // # <comment>
+	LexAgenda,   // <agenda>: <date>
 }
 
 // NewTokenizer creates a new Tokenizer object.
