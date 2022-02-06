@@ -100,7 +100,7 @@ func TestCommentWriter(t *testing.T) {
 		{
 			desc:    "normal comment",
 			msg:     "hello world",
-			wantOut: "<!-- hello world -->",
+			wantOut: "<!-- hello world -->\n",
 		},
 	}
 	for _, tt := range tests {
