@@ -10,10 +10,10 @@ type TokenKind string
 
 const (
 	KindAgenda   TokenKind = "agenda"
-	KindKeyword            = "keyword"
-	KindComment            = "comment"
-	KindHeadline           = "headline"
-	KindSection            = "section"
+	KindKeyword  TokenKind = "keyword"
+	KindComment  TokenKind = "comment"
+	KindHeadline TokenKind = "headline"
+	KindSection  TokenKind = "section"
 )
 
 // NewToken creates new Token object.
