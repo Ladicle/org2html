@@ -8,6 +8,19 @@ import (
 	"strings"
 )
 
+type KeywordType string
+
+const (
+	IncludeKey   KeywordType = "INCLUDE"
+	SetupfileKey KeywordType = "SETUPFILE"
+	OptionsKey   KeywordType = "OPTIONS"
+	MacroKey     KeywordType = "MACRO"
+	LinkKey      KeywordType = "LINK"
+	NameKey      KeywordType = "NAME"
+	CaptionKey   KeywordType = "CAPTION"
+	AttrHTMLKey  KeywordType = "ATTR_HTML"
+)
+
 var _ Node = Keyword{}
 
 type Keyword struct {
