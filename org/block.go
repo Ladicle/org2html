@@ -75,7 +75,7 @@ func ParseBlock(p *Parser, i int) (int, Node, error) {
 		content bytes.Buffer
 		start   = i
 	)
-	for i += 1; i < len(p.tokens); i++ {
+	for i++; i < len(p.tokens); i++ {
 		if p.tokens[i].kind == KindBlockEnd {
 			if got, want := strings.ToUpper(p.tokens[i].vals[0]), block.Name; got != want {
 				return 0, nil, fmt.Errorf(

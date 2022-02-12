@@ -188,22 +188,57 @@ func TestParseBlock(t *testing.T) {
 func TestBlockWriter(t *testing.T) {
 	var tests = []struct {
 		desc    string
-		msg     string
+		block   Block
 		wantOut string
 	}{
 		{
-			desc:    "normal block",
-			msg:     "hello world",
-			wantOut: "<!-- hello world -->\n",
+			desc: "normal block",
+			block: Block{
+				Name:    "info",
+				Content: "hello\nworld",
+			},
+			wantOut: "<div class=\"org-block block-info\">\nhello\nworld\n</div>\n",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
-			var (
-				out bytes.Buffer
-				c   = Block{}
-			)
-			if err := c.Write(&out); err != nil {
+			var out bytes.Buffer
+			if err := tt.block.Write(&out); err != nil {
+				t.Fatalf("unexpected error: err=%v", err)
+			}
+			if got := out.String(); got != tt.wantOut {
+				t.Errorf("unexpected output: got=%v, want=%v", got, tt.wantOut)
+			}
+		})
+	}
+}
+
+func TestSrcBlockWriter(t *testing.T) {
+	var tests = []struct {
+		desc    string
+		block   SourceBlock
+		wantOut string
+	}{
+		{
+			desc: "normal block",
+			block: SourceBlock{
+				Language:   "bash",
+				SourceCode: "#!/bin/bash -ex\necho 'hello world!'",
+				Property:   []string{":var x=1"},
+			},
+			wantOut: `<div class="org-block block-src">
+<code class="block lang-bash" data-lang="bash">
+#!/bin/bash -ex
+echo 'hello world!'
+</code>
+</div>
+`,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			var out bytes.Buffer
+			if err := tt.block.Write(&out); err != nil {
 				t.Fatalf("unexpected error: err=%v", err)
 			}
 			if got := out.String(); got != tt.wantOut {
