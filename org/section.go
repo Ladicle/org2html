@@ -20,8 +20,8 @@ func (s Section) Write(w io.Writer) error {
 	return nil
 }
 
-func LexSection(line string) (Token, bool) {
-	return NewToken(KindSection, 1, []string{strings.TrimSpace(line)}), true
+func LexText(line string) (Token, bool) {
+	return NewToken(KindText, 1, []string{strings.TrimSpace(line)}), true
 }
 
 func ParseSection(p *Parser, i int) (int, Node, error) {
@@ -30,7 +30,7 @@ func ParseSection(p *Parser, i int) (int, Node, error) {
 		paragraphs []string
 	)
 	start, end := i, len(p.tokens)
-	for i < end && p.tokens[i].kind == KindSection {
+	for i < end && p.tokens[i].kind == KindText {
 		if len(p.tokens[i].vals) == 0 {
 			return 0, nil, fmt.Errorf("section token[%d] does not have any values", i)
 		}

@@ -20,18 +20,18 @@ func TestLexSection(t *testing.T) {
 			desc:      "empty line",
 			line:      "",
 			wantFlag:  true,
-			wantToken: NewToken(KindSection, 1, []string{""}),
+			wantToken: NewToken(KindText, 1, []string{""}),
 		},
 		{
 			desc:      "section",
 			line:      "this is test section",
 			wantFlag:  true,
-			wantToken: NewToken(KindSection, 1, []string{"this is test section"}),
+			wantToken: NewToken(KindText, 1, []string{"this is test section"}),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
-			token, flag := LexSection(tt.line)
+			token, flag := LexText(tt.line)
 			if flag != tt.wantFlag {
 				t.Errorf("unexpected flag: got=%v, want=%v", flag, tt.wantFlag)
 			}
@@ -52,20 +52,20 @@ func TestParseSection(t *testing.T) {
 	}{
 		{
 			desc:      "no section",
-			tokens:    []Token{NewToken(KindSection, 1, []string{})},
+			tokens:    []Token{NewToken(KindText, 1, []string{})},
 			wantError: errors.New("section token[0] does not have any values"),
 		},
 		{
 			desc:         "one line",
-			tokens:       []Token{NewToken(KindSection, 1, []string{"this is section"})},
+			tokens:       []Token{NewToken(KindText, 1, []string{"this is section"})},
 			wantNode:     Section{Paragraphs: []string{"this is section"}},
 			wantConsumed: 1,
 		},
 		{
 			desc: "multiple line",
 			tokens: []Token{
-				NewToken(KindSection, 1, []string{"line1."}),
-				NewToken(KindSection, 1, []string{"line2."}),
+				NewToken(KindText, 1, []string{"line1."}),
+				NewToken(KindText, 1, []string{"line2."}),
 			},
 			wantNode:     Section{Paragraphs: []string{"line1. line2."}},
 			wantConsumed: 2,
@@ -73,10 +73,10 @@ func TestParseSection(t *testing.T) {
 		{
 			desc: "multiple paragraphs",
 			tokens: []Token{
-				NewToken(KindSection, 1, []string{"paragraph1."}),
-				NewToken(KindSection, 1, []string{""}),
-				NewToken(KindSection, 1, []string{"paragraph2."}),
-				NewToken(KindSection, 1, []string{"..."}),
+				NewToken(KindText, 1, []string{"paragraph1."}),
+				NewToken(KindText, 1, []string{""}),
+				NewToken(KindText, 1, []string{"paragraph2."}),
+				NewToken(KindText, 1, []string{"..."}),
 			},
 			wantNode:     Section{Paragraphs: []string{"paragraph1.", "paragraph2. ..."}},
 			wantConsumed: 4,

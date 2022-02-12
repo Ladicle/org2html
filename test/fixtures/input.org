@@ -18,3 +18,18 @@ At quis risus sed vulputate odio ut enim. Mattis aliquam faucibus purus in massa
 
 ** TODO [#B] Headline 2
 *** headline 3
+
+    #+begin_src bash :details t
+    #!/bin/bash -ex
+    echo "hello world!"
+    #+end_src
+
+    #+RESULTS:
+    : hello world!
+
+* References
+
+  #+begin_quote
+Bob: hello
+Alice: world!
+  #+end_quote
